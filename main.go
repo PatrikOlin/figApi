@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	// "strconv"
+	"figApi/util"
 
 	"github.com/gorilla/mux"
 )											 
@@ -69,7 +70,7 @@ type server struct{}
 func main() {
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1").Subrouter()
-	api.HandleFunc("/articles", getArticle).Methods(http.MethodGet)
+	api.HandleFunc("/articles", getArticle).Methods(http.MethodGet).Handler(util.Logger)
 	api.HandleFunc("/people", getPerson).Methods(http.MethodGet)
 	api.HandleFunc("/companies", getCompany).Methods(http.MethodGet)
 	// api.HandleFunc("/", put).Methods(http.MethodPut)
