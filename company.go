@@ -10,10 +10,10 @@ import (
 
 
 type Company struct {
-	CompanyName     string
-	OrgNum          string
-	VatCode         string
-	BeneficialOwner string
+	CompanyName     string `json:"companyName"`
+	OrgNum          string `json:"orgNum"`
+	VatCode         string `json:"vatCode"`
+	BeneficialOwner string `json:"beneficialOwner"`
 }
 
 func fetchCompanies(amount int) []Company {

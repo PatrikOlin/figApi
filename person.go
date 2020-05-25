@@ -10,12 +10,12 @@ import (
 )
 
 type Person struct {
-	Name     string
-	Pin      string
-	Email    string
-	Address  string
-	Phone    string
-	Password string
+	Name     string `json:"name"`
+	Pin      string `json:"pin"`
+	Email    string `json:"email"`
+	Address  string `json:"address"`
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
 }
 
 func fetchPeople(amount int) []Person {

@@ -9,11 +9,11 @@ import (
 )			 
 
 type Article struct {
-	Id          string
-	Description string
-	VatCode     int
-	Price       string
-	Unit        string
+	Id          string `json:"id"`
+	Description string `json:"description"`
+	VatCode     int `json:"vatCode"`
+	Price       string `json:"price"`
+	Unit        string `json:"unit"`
 }
 
 func fetchArticles(amount int) []Article {

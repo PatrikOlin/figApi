@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	// "strconv"
-	"figApi/util"
+	// "figApi/util"
 
 	"github.com/gorilla/mux"
 )											 
@@ -69,8 +69,8 @@ type server struct{}
 
 func main() {
 	r := mux.NewRouter()
-	api := r.PathPrefix("/api/v1").Subrouter()
-	api.HandleFunc("/articles", getArticle).Methods(http.MethodGet).Handler(util.Logger)
+	api := r.PathPrefix("/v1").Subrouter()
+	api.HandleFunc("/articles", getArticle).Methods(http.MethodGet)
 	api.HandleFunc("/people", getPerson).Methods(http.MethodGet)
 	api.HandleFunc("/companies", getCompany).Methods(http.MethodGet)
 	// api.HandleFunc("/", put).Methods(http.MethodPut)
@@ -78,5 +78,6 @@ func main() {
 
 	// api.HandleFunc("/user/{userID}/comment/{commentID}", params).Methods(http.MethodGet)
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8124", r))					  
 }
+																  
