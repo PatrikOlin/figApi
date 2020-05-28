@@ -8,6 +8,7 @@ import (
 	// "figApi/util"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 )											 
 
 type server struct{}
@@ -69,7 +70,7 @@ type server struct{}
 
 func main() {
 	r := mux.NewRouter()
-	api := r.PathPrefix("/v1").Subrouter()
+	api := r.PathPrefix("/v1").Subrouter()						  
 	api.HandleFunc("/articles", getArticle).Methods(http.MethodGet)
 	api.HandleFunc("/people", getPerson).Methods(http.MethodGet)
 	api.HandleFunc("/companies", getCompany).Methods(http.MethodGet)
@@ -78,6 +79,7 @@ func main() {
 
 	// api.HandleFunc("/user/{userID}/comment/{commentID}", params).Methods(http.MethodGet)
 
-	log.Fatal(http.ListenAndServe(":8124", r))					  
+	log.Fatal(http.ListenAndServe(":8124", handlers.CORS() (r))) 
 }
+																  
 																  
