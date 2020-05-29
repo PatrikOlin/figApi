@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"fmt"							   
 )									   
 
 func getArticle(w http.ResponseWriter, r *http.Request) {
