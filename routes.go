@@ -79,7 +79,6 @@ func getCompany(w http.ResponseWriter, r *http.Request) {
 func getAmountParam(r *http.Request) (int, error) {
 	amount := 1
 	queryParams := r.URL.Query()
-	fmt.Println(queryParams)
 	a := queryParams.Get("amount")
 	if a != "" {
 		val, err := strconv.Atoi(a)
