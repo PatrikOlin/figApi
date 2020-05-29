@@ -33,7 +33,7 @@ func generatePerson() Person {
 	email := getEmailForName(fullname)
 	person := Person{
 		Name: fullname,
-		Pin: getPIN(),
+		Pin: datastore.GetRandomLine("safepins"),
 		Address: getFullAddress(),				  
 		Phone: getPhoneNumber(),				  
 		Email: email,
