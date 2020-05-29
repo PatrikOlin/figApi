@@ -9,20 +9,51 @@ import (
 	"figApi/util"
 			
 	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
+)
+
+const (
+	host = "192.168.1.170"
+	port = 5432
+	user = "patrik"
+	password = "bokhylla"
+	dbname = "fejk"
 )
 
 	 
 func Initdb() {
-	createDb()
-	initFirstnameTable()
-	initSurnameTable()
-	initStreetPrefixTable()
-	initStreetSuffixTable()
-	initPostalAddressTable()
-	initPasswordTable()
-	initEmailDomainsTable()
-	initCompanynameTable()
-	initArticlesTable()
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	// createDb()
+	// initFirstnameTable()
+	// initSurnameTable()
+	// initStreetPrefixTable()
+	// initStreetSuffixTable()
+	// initPostalAddressTable()
+	// initPasswordTable()
+	// initEmailDomainsTable()
+	// initCompanynameTable()
+	// initArticlesTable()
+}
+
+func getConn() string {
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	host, port, user, password, dbname)
+
+	return psqlInfo;
 }
 
 func createDb() {
@@ -189,15 +220,21 @@ func populateTable(sourcefile string, inputStmt string) {
 func GetRandomLine(tablename string) string {
 	var result string
 	var id int
-	db, _ := sql.Open("sqlite3", "./datastore/store.db")
-	row := db.QueryRow("SELECT * FROM " + tablename + " ORDER BY RANDOM() LIMIT 1")
-	err := row.Scan(&id, &result)
+	// db, _ := sql.Open("sqlite3", "./datastore/store.db")
 
+	db, err := sql.Open("postgres", getConn())
 	if err != nil {
-		if err == sql.ErrNoRows {
+		panic(err)
+	}
+	
+	row := db.QueryRow("SELECT * FROM " + tablename + " TABLESAMPLE SYSTEM(0.001) LIMIT 1;")
+	error := row.Scan(&id, &result)
+
+	if error != nil {
+		if error == sql.ErrNoRows {
 			fmt.Println("No rows found")
 		} else {
-			panic(err)
+			panic(error)
 		}
 	}
 
