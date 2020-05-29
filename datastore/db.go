@@ -8,34 +8,27 @@ import (
 	"os"
 	"figApi/util"
 			
+	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/lib/pq"
-)
-
-const (
-	host = "localhost"
-	port = 5432
-	user = "patrik"
-	password = "bokhylla"
-	dbname = "fejk"
 )
 
 	 
 func Initdb() {
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-	host, port, user, password, dbname)
+	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	// host, port, user, password, dbname)
+	
+	// db, err := sql.Open("postgres", psqlInfo)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer db.Close()
 
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
+	// err = db.Ping()
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	// createDb()
 	// initFirstnameTable()
@@ -49,12 +42,12 @@ func Initdb() {
 	// initArticlesTable()
 }
 
-func getConn() string {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-	host, port, user, password, dbname)
+// func getConn() string {
+// 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+// 	host, port, user, password, dbname)
 
-	return psqlInfo;
-}
+// 	return psqlInfo;
+// }
 
 func createDb() {
 	path := "./datastore/store.db"
@@ -221,8 +214,8 @@ func GetRandomLine(tablename string) string {
 	var result string
 	var id int
 	// db, _ := sql.Open("sqlite3", "./datastore/store.db")
-
-	db, err := sql.Open("postgres", getConn())
+	err := godotenv.Load()
+	db, err := sql.Open("postgres", os.ExpandEnv("host=${HOST} user=${USER} dbname=${DBNAME} sslmode=disable password=${PASSWORD}"))
 	if err != nil {
 		panic(err)
 	}
