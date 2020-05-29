@@ -215,12 +215,15 @@ func GetRandomLine(tablename string) string {
 	var id int
 	// db, _ := sql.Open("sqlite3", "./datastore/store.db")
 	err := godotenv.Load()
+	if err != nil {
+		panic("Failed to load env-file")
+	}
 	db, err := sql.Open("postgres", os.ExpandEnv("host=${HOST} user=${USER} dbname=${DBNAME} sslmode=disable password=${PASSWORD}"))
 	if err != nil {
-		panic(err)
+		panic("Failed to connect to db")
 	}
 	
-	row := db.QueryRow("SELECT * FROM " + tablename + " TABLESAMPLE SYSTEM(0.001) LIMIT 1;")
+	row := db.QueryRow("SELECT * FROM " + tablename + " ORDER BY random() LIMIT 1;")
 	error := row.Scan(&id, &result)
 
 	if error != nil {
