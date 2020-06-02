@@ -224,7 +224,7 @@ func GetRandomLine(tablename string) string {
 	}
 	
 	row := db.QueryRow("SELECT * FROM " + tablename + " ORDER BY random() LIMIT 1;")
-	error := row.Scan(&id, &result)
+	error := row.Scan(&result, &id)
 
 	if error != nil {
 		if error == sql.ErrNoRows {
