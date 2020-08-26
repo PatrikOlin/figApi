@@ -48,7 +48,11 @@ func getCompanyname() string {
 	var companyname strings.Builder
 
 	for i := 0; i < numOfWords; i++ {
-		companyname.WriteString(datastore.GetRandomLine("companynameparts"))
+		s := datastore.GetRandomLine("companynameparts")
+		if (s == "&" && (i == 0 || i == numOfWords - 1)) {
+			continue
+		}
+		companyname.WriteString(s)
 		companyname.WriteString(" ")
 	}
 
