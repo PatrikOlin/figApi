@@ -85,7 +85,10 @@ func getAmountParam(r *http.Request) (int, error) {
 			return amount, err
 		}
 		amount = val
-	}								   
+	}
+	if amount > 100 {
+		amount = 100
+	}
 	return amount, nil				   
 }
 

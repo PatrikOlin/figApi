@@ -1,29 +1,35 @@
 package main
 
 import (
-	"strings"
 	"figApi/datastore"
 	"figApi/util"
 	"math/rand"
+	"strings"
+	"sync"
 	"time"
 )
 
-
 type Company struct {
-	CompanyName     string `json:"companyName"`
-	OrgNum          string `json:"orgNum"`
-	VatCode         string `json:"vatCode"`
-	Address         string `json:"address"`
-	BeneficialOwner string `json:"beneficialOwner"`
+	CompanyName string `json:"companyName"`
+	OrgNum      string `json:"orgNum"`
+	VatCode     string `json:"vatCode"`
+	Address     string `json:"address"`
+	CEO         Person `json:"CEO"`
 }
 
 func fetchCompanies(amount int) []Company {
-
+	var wg sync.WaitGroup
+	wg.Add(amount)
 	var companies []Company
-		for i := 1; i <= amount; i++ {
-			companies = append(companies, generateCompany())
-		}
 
+	for i := 1; i <= amount; i++ {
+		go func(i int) {
+			defer wg.Done()
+			companies = append(companies, generateCompany())
+		}(i)
+	}
+
+	wg.Wait()
 	return companies
 }
 
@@ -31,16 +37,15 @@ func generateCompany() Company {
 	seed := time.Now().UnixNano()
 
 	company := Company{
-		CompanyName:     getCompanyname(),
-		OrgNum:          getFormattedOrgNum(seed),
-		VatCode:         getVatNumForOrgNum(getOrgNum(seed)),
-		Address:         getFullAddress(),
-		BeneficialOwner: getFullName(),
+		CompanyName: getCompanyname(),
+		OrgNum:      getFormattedOrgNum(seed),
+		VatCode:     getVatNumForOrgNum(getOrgNum(seed)),
+		Address:     getFullAddress(),
+		CEO:         generatePerson(),
 	}
 
 	return company
 }
-
 
 func getCompanyname() string {
 	rand.Seed(time.Now().UnixNano())
@@ -49,7 +54,7 @@ func getCompanyname() string {
 
 	for i := 0; i < numOfWords; i++ {
 		s := datastore.GetRandomLine("companynameparts")
-		if (s == "&" && (i == 0 || i == numOfWords - 1)) {
+		if s == "&" && (i == 0 || i == numOfWords-1) {
 			continue
 		}
 		companyname.WriteString(s)
