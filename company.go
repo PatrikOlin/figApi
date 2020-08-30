@@ -7,6 +7,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 type Company struct {
@@ -46,7 +49,19 @@ func generateCompany() Company {
 		CEO:         generatePerson(),
 	}
 
+	company.CEO.Email = strings.Split(company.CEO.Email, "@")[0] + getCompanyDomain(company.CompanyName)
 	return company
+}
+
+func getCompanyDomain(name string) string {
+	tlds := []string{".se", ".dk", ".com", ".fi", ".tk", ".org", ".xyz", ".nu", ".gov"}
+	r := rand.Intn(len(tlds))
+	name = strings.ReplaceAll(name, " ", "")
+
+	e := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
+	result, _, _ := transform.String(e, name)
+	
+	return strings.ToLower("@" + result + tlds[r])
 }
 
 func getCompanyname() string {
