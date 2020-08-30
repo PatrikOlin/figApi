@@ -14,6 +14,7 @@ type Company struct {
 	OrgNum      string `json:"orgNum"`
 	VatCode     string `json:"vatCode"`
 	Address     string `json:"address"`
+	Bankgiro    string `json:"bankgiro"`
 	CEO         Person `json:"CEO"`
 }
 
@@ -41,6 +42,7 @@ func generateCompany() Company {
 		OrgNum:      getFormattedOrgNum(seed),
 		VatCode:     getVatNumForOrgNum(getOrgNum(seed)),
 		Address:     getFullAddress(),
+		Bankgiro:    getBankgiro(),
 		CEO:         generatePerson(),
 	}
 
