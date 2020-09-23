@@ -56,6 +56,11 @@ func generateCompany() Company {
 func getCompanyDomain(name string) string {
 	tlds := []string{".se", ".dk", ".com", ".fi", ".tk", ".org", ".xyz", ".nu", ".gov"}
 	r := rand.Intn(len(tlds))
+	if len(name) > 25 {
+		n := strings.Split(name, " ")
+		n = n[:len(n)-1]
+		name = strings.Join(n, " ")
+	}	
 	name = strings.ReplaceAll(name, " ", "")
 
 	e := transform.Chain(norm.NFD, transform.RemoveFunc(isMn), norm.NFC)
@@ -66,8 +71,14 @@ func getCompanyDomain(name string) string {
 
 func getCompanyname() string {
 	rand.Seed(time.Now().UnixNano())
-	numOfWords := util.RangeIn(2, 5)
+	numOfWords := util.RangeIn(2, 4)
+	numType := util.RangeIn(0, 100)
 	var companyname strings.Builder
+	if numType < 5 {
+		pt := datastore.GetRandomLine("companynametypes")
+		companyname.WriteString(pt)
+		companyname.WriteString(" ")
+	}
 
 	for i := 0; i < numOfWords; i++ {
 		s := datastore.GetRandomLine("companynameparts")
@@ -77,10 +88,19 @@ func getCompanyname() string {
 		companyname.WriteString(s)
 		companyname.WriteString(" ")
 	}
+		
+	if numType <= 25 && numType >= 5 {
+		t := datastore.GetRandomLine("companynametypes")
+		companyname.WriteString(t)
+	}
 
 	finishedCompanyname := strings.TrimSpace(companyname.String())
 
 	return finishedCompanyname
+}
+
+func getCompanyType() string {
+	return datastore.GetRandomLine("companynametypes")
 }
 
 func getVatNumForOrgNum(orgNum string) string {
