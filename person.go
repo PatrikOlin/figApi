@@ -16,12 +16,15 @@ import (
 
 type Person struct {
 	Name     string `json:"name"`
+	Image    string `json:"image"`
 	Pin      string `json:"pin"`
 	Email    string `json:"email"`
 	Address  string `json:"address"`
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 }
+
+const ImageBaseURL = "https://fejk.company/static/img/"
 
 func fetchPeople(amount int) []Person {
 	var wg sync.WaitGroup
@@ -43,6 +46,7 @@ func generatePerson() Person {
 	email := getEmailForName(fullname)
 	person := Person{
 		Name:     fullname,
+		Image:    getImageUrl(),
 		Pin:      datastore.GetRandomLine("safepins"),
 		Address:  getFullAddress(),
 		Phone:    getPhoneNumber(),
@@ -53,7 +57,7 @@ func generatePerson() Person {
 	return person
 }
 
-func getFullName() string {												
+func getFullName() string {
 	var fullName strings.Builder
 	fullName.WriteString(datastore.GetRandomLine("firstnames"))
 	fullName.WriteString(" ")
@@ -95,6 +99,11 @@ func getPhoneNumber() string {
 
 func getPassword() string {
 	return datastore.GetRandomLine("passwords")
+}
+
+func getImageUrl() string {
+	fn := datastore.GetRandomLine("profileimages")
+	return ImageBaseURL + fn
 }
 
 func isMn(r rune) bool {
